@@ -3,13 +3,21 @@ Descripción de la práctica
 Se busca diseñar e implementar un controlador para una máquina expendedora que esté
 basado en Arduino UNO y en los sensores/actuadores que se proporcionan en el kit Arduino.
 La práctica tendrá que integrar obligatoriamente los siguientes componentes hardware:
+
 ● Arduino UNO
+
 ● LCD
+
 ● Joystick
+
 ● Sensor temperatura/Humedad DHT11
+
 ● Sensor Ultrasonido
+
 ● Boton
+
 ● 2 LEDS Normales (LED1, LED2)
+
 
 En la primera parte del programa tenemos incluidas las librerías que vamos a utilizar además de definir los pines que vamos a implementar para cada sensor, LED o botón. También definimos alguna que otra variable global que tenga relación con cada elemento para poder ubicarlas más rápido.
 
