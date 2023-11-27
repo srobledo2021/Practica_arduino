@@ -1,5 +1,6 @@
-## Práctica Sistemas Empotrados
-Descripción de la práctica
+# Práctica Sistemas Empotrados
+## Descripción de la práctica
+
 Se busca diseñar e implementar un controlador para una máquina expendedora que esté
 basado en Arduino UNO y en los sensores/actuadores que se proporcionan en el kit Arduino.
 La práctica tendrá que integrar obligatoriamente los siguientes componentes hardware:
