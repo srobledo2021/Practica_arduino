@@ -235,6 +235,20 @@ void buttonInterruption() {
   }
 }
 ```
+Se ha implementado Watchdog, que podemos incluir con la biblioteca: <avr/wdt.h>.
+Para ello, primero debemos de incluir estas dos líneas en la funcion setup():
+```
+void setup() {
+
+  wdt_disable();
+  wdt_enable(WDTO_8S);
+}
+```
+Donde la desactivación del Watchdog Timer mediante wdt_disable() evita que se produzca un reinicio automático. Y después vamos a configurar el Watchdog Timer con un tiempo de espera de 8 segundos. 
+
+Para luego más tarde, a lo largo del código, poder resetear el contador llamando a la función wdt_reset().
+
+Imagen del circuito en [Fritzing](https://fritzing.org/)
 
 ![image](https://github.com/srobledo2021/Practica_arduino/assets/113594786/415cd6ae-7215-4af0-82a4-7f017483b280)
 
@@ -247,4 +261,5 @@ Las librerías que estamos usando son:
 
 A parte de las que ya están incluidas como por ejemplo sería:
 
-- LiquidCrystal
+- LiquidCrystal.h
+- avr/wdt.h
