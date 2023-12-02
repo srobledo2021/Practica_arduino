@@ -236,11 +236,15 @@ void buttonInterruption() {
 }
 ```
 
+![image](https://github.com/srobledo2021/Practica_arduino/assets/113594786/415cd6ae-7215-4af0-82a4-7f017483b280)
+
+
+
 Las librerías que estamos usando son:
 
-ArduinoThread (by Ivan Seidel v2.1.1)
-DHT sensor library (by Adafruit v1.4.6)
+- ArduinoThread (by Ivan Seidel v2.1.1)
+- DHT sensor library (by Adafruit v1.4.6)
 
 A parte de las que ya están incluidas como por ejemplo sería:
 
-LiquidCrystal
+- LiquidCrystal
