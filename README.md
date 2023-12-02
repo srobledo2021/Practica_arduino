@@ -172,6 +172,18 @@ void thread_showTempHum(){
   lcd.print(h);
 }
 ```
+Pero antes de ello, para poder utilizar el thread debemos de incluir: 
+```
+#include <Thread.h>
+#include <StaticThreadController.h>
+#include <ThreadController.h>
+```
+Para inicializar el thread y el controlador para los threads:
+```
+ThreadController controller = ThreadController();
+Thread myThread = Thread();
+```
+
 Para implementar el joystick, lo haremos de la siguiente manera:
 
 Para tomar las medidas: 
@@ -206,9 +218,23 @@ char* joystickDir(int x, int y, int buttonValue){
   }
 }
 ```
-Además de threads vamos a utilizar una interrupción hardware para el uso del botón. 
-
-
+Además de threads vamos a utilizar una interrupción hardware para el uso del botón. Es por eso que en la función 'setup()' a la hora de inicializar el botón encontramos:
+```
+//Button
+  pinMode(buttonPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(buttonPin), buttonInterruption, CHANGE);
+```
+Cuando realizamos este callback, se llama a la función 'buttonInterruption()'que controla el tiempo que mantenemos pulsado el botón:
+```
+void buttonInterruption() {
+  if (digitalRead(buttonPin) == HIGH) {
+    tiempoInicio = millis();  // Se presionó el botón, registra el tiempo
+    botonPresionado = true;
+  } else {
+    botonPresionado = false;  // Se soltó el botón, reinicia el temporizador
+  }
+}
+```
 
 Las librerías que estamos usando son:
 
