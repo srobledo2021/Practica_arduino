@@ -2,10 +2,7 @@
 ## Descripción de la práctica
 
 Se busca diseñar e implementar un controlador para una máquina expendedora que esté
-basado en Arduino UNO y en los sensores/actuadores que se proporcionan en el kit Arduino.
-La práctica tendrá que integrar obligatoriamente los siguientes componentes hardware:
-
-● Arduino UNO
+basado en Arduino UNO y en los sensores/actuadores que se enumeran a continuación:
 
 ● LCD
 
@@ -15,7 +12,7 @@ La práctica tendrá que integrar obligatoriamente los siguientes componentes ha
 
 ● Sensor Ultrasonido
 
-● Boton
+● Botón
 
 ● 2 LEDS Normales (LED1, LED2)
 
@@ -24,7 +21,7 @@ En la primera parte del programa tenemos incluidas las librerías que vamos a ut
 
 Para el LCD:
 ```
-#include <LiquidCrystal.h> // Entre los símbolos <> buscará en la carpeta de librerías configurada
+#include <LiquidCrystal.h> 
 #define COLS 16 // Columnas del LCD
 #define ROWS 2 // Filas del LCD
 ```
@@ -42,8 +39,7 @@ DHT dht(DHTPIN, DHTTYPE);
 LCD pines:
 ```
 // Inicialización del LCD
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-int ledPin = A4;
+LiquidCrystal lcd(12, 11, 5, 4, 3, 7);
 const int columns = 16;
 const int rows = 2;
 ```
@@ -66,6 +62,7 @@ const int pinJoyButton = 13;
 const int pinLed = 10;
 //---------------
 ```
+Para el botón:
 ```
 //button
 const int buttonPin = 7;
@@ -73,16 +70,17 @@ unsigned long tiempoInicio = 0;
 //---------------
 ```
 
-La función 'setup()' nos quedaría de la siguiente manera para configutar todos estos pines además de iniciar el sensor de humedad y temperatura, entre otras cosas.
-```
-void setup() {
+En la función 'setup()', ya que solo va a ser ejecutada una vez, la utilizaremos, no solo para inicializar los sensores sino que también implementaremos la funcionalidad de arranque. Vemos como se inicializa una interrupción y un thread que más adelante explicaremos.
 
-  // Configuración monitor serie
+
+Dentro de esta función encontramos:
+
+```
+// Configuración monitor serie
   Serial.begin(9600);
 
   // Configuramos las filas y las columnas del LCD en este caso 16 columnas y 2 filas
   lcd.begin(COLS, ROWS);
-
 
   //Temp y humedad
   dht.begin();
@@ -96,5 +94,127 @@ void setup() {
 
   //Button
   pinMode(buttonPin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(buttonPin), buttonInterruption, CHANGE);
+
+  //Thread
+  myThread.enabled = true;
+  myThread.setInterval(300);
+  myThread.onRun(thread_showTempHum);
+  controller.add(&myThread);
+```
+Funcionalidad de arranque:
+```
+  //---------------------------------
+   //arrancar el sistema
+  // Limpiamos la pantalla
+  lcd.clear();
+ 
+  // Situamos el cursor en la columna 0 fila 0
+  lcd.setCursor(0,0);
+ 
+  // Escribimos Hola Mundo!!!!!!
+  lcd.print("CARGANDO...");
+  for (int i = 0; i < 3; ++i) {
+    digitalWrite(ledPin, HIGH);
+    delay(1000);
+    digitalWrite(ledPin, LOW);
+    delay(1000);
+  }
+  lcd.clear();
+
+  //--------------------------------
+```
+Después de esto, vamos a implementar el resto de funcionalidades de servicio y modo administrador dentro de la función 'loop()'.
+
+En el código, definimos algunas funciones importantes ya sea para medir con los sensores o para implementar alguna funcionalidad a la hora de navegar por los menús, como por ejemplo podrían ser:
+
+La función 'ping' que se utiliza para medir la distancia con el sensor de ultrasonidos y nos la devuelve.
+```
+int ping(int TriggerPin, int EchoPin) {
+  long duration, distanceCm;
+  
+  digitalWrite(TriggerPin, LOW);  //para generar un pulso limpio ponemos a LOW 4us
+  delayMicroseconds(4);
+  digitalWrite(TriggerPin, HIGH);  //generamos Trigger (disparo) de 10us
+  delayMicroseconds(10);
+  digitalWrite(TriggerPin, LOW);
+  
+  duration = pulseIn(EchoPin, HIGH);  //medimos el tiempo entre pulsos, en microsegundos
+  
+  distanceCm = duration * 10 / 292/ 2;   //convertimos a distancia, en cm
+  return distanceCm;
 }
 ```
+En el código hemos implementado ArduinoThreads, por ejemplo para la siguiente función, cuyo funcionamiento se basa en la medida de la temperatura y humedad, además de imprimirlas por el display del LCD:
+
+```
+void thread_showTempHum(){
+  float t = 0.00;
+  float h = 0.00;
+  // Leemos la humedad relativa
+  
+  h = dht.readHumidity();
+  // Leemos la temperatura en grados centígrados (por defecto)
+  t = dht.readTemperature();
+
+  // Comprobamos si ha habido algún error en la lectura
+  if (isnan(h) || isnan(t)) {
+    Serial.println("Error obteniendo los datos del sensor DHT11");
+    return;
+  }
+  
+  lcd.setCursor(0,0);
+  lcd.clear();
+  lcd.print("Temp :");
+  lcd.print(t);
+  lcd.setCursor(0,1);
+  lcd.print("Humedad: ");
+  lcd.print(h);
+}
+```
+Para implementar el joystick, lo haremos de la siguiente manera:
+
+Para tomar las medidas: 
+```
+ Xvalue = analogRead(pinJoyX);
+    delay(50);//es necesaria una pequeña pausa entre lecturas analógicas
+    Yvalue = analogRead(pinJoyY);
+    buttonValue = digitalRead(pinJoyButton);
+    char* dir = joystickDir(Xvalue,Yvalue,buttonValue);
+```
+Esa dirección, nos la devuelve la función 'joystickDir()' ya que analiza los valores recogidos de forma analógica y en función de estos, se determinará la dirección del joystick para después emplearla en el menu.
+```
+
+char* joystickDir(int x, int y, int buttonValue){
+  if (x>600){
+    return "UP";
+  }
+  else if (x<400){
+    return "DOWN";
+  }
+  else if (y>600){
+    return "RIGHT";
+  }
+  else if (y<400){
+    return "LEFT";
+  }
+  else if (buttonValue == 0){
+    return "R3";
+  }
+  else{
+    return "NONE";
+  }
+}
+```
+Además de threads vamos a utilizar una interrupción hardware para el uso del botón. 
+
+
+
+Las librerías que estamos usando son:
+
+ArduinoThread (by Ivan Seidel v2.1.1)
+DHT sensor library (by Adafruit v1.4.6)
+
+A parte de las que ya están incluidas como por ejemplo sería:
+
+LiquidCrystal
