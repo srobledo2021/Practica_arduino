@@ -251,6 +251,8 @@ Donde la desactivación del Watchdog Timer mediante wdt_disable() evita que se p
 
 Para luego más tarde, a lo largo del código, poder resetear el contador llamando a la función wdt_reset().
 
+## Circuito
+
 Imagen del circuito en [Fritzing](https://fritzing.org/)
 
 ![image](https://github.com/srobledo2021/Practica_arduino/assets/113594786/415cd6ae-7215-4af0-82a4-7f017483b280)
