@@ -192,12 +192,12 @@ Para tomar las medidas:
     delay(50);//es necesaria una pequeña pausa entre lecturas analógicas
     Yvalue = analogRead(pinJoyY);
     buttonValue = digitalRead(pinJoyButton);
-    char* dir = joystickDir(Xvalue,Yvalue,buttonValue);
+    const char* dir = joystickDir(Xvalue,Yvalue,buttonValue);
 ```
 Esa dirección, nos la devuelve la función 'joystickDir()' ya que analiza los valores recogidos de forma analógica y en función de estos, se determinará la dirección del joystick para después emplearla en el menu.
 ```
 
-char* joystickDir(int x, int y, int buttonValue){
+const char* joystickDir(int x, int y, int buttonValue){
   if (x>600){
     return "UP";
   }
