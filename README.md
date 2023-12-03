@@ -112,7 +112,6 @@ Funcionalidad de arranque:
   // Situamos el cursor en la columna 0 fila 0
   lcd.setCursor(0,0);
  
-  // Escribimos Hola Mundo!!!!!!
   lcd.print("CARGANDO...");
   for (int i = 0; i < 3; ++i) {
     digitalWrite(ledPin, HIGH);
