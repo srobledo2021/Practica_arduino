@@ -266,3 +266,8 @@ A parte de las que ya están incluidas como por ejemplo sería:
 
 - LiquidCrystal.h
 - avr/wdt.h
+
+
+## Video Explicación:
+
+[LINK](https://youtu.be/NgCNyIZdPfE?si=foFIrFFElIdzue_4)
