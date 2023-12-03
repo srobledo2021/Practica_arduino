@@ -145,6 +145,7 @@ int ping(int TriggerPin, int EchoPin) {
   return distanceCm;
 }
 ```
+## ArduinoThreads
 En el código hemos implementado ArduinoThreads, por ejemplo para la siguiente función, cuyo funcionamiento se basa en la medida de la temperatura y humedad, además de imprimirlas por el display del LCD:
 
 ```
@@ -218,6 +219,7 @@ char* joystickDir(int x, int y, int buttonValue){
   }
 }
 ```
+## Interrupciones
 Además de threads vamos a utilizar una interrupción hardware para el uso del botón. Es por eso que en la función 'setup()' a la hora de inicializar el botón encontramos:
 ```
 //Button
@@ -235,6 +237,7 @@ void buttonInterruption() {
   }
 }
 ```
+## Watchdog
 Se ha implementado Watchdog, que podemos incluir con la biblioteca: <avr/wdt.h>.
 Para ello, primero debemos de incluir estas dos líneas en la funcion setup():
 ```
