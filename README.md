@@ -254,8 +254,7 @@ Para luego más tarde, a lo largo del código, poder resetear el contador llaman
 
 Imagen del circuito en [Fritzing](https://fritzing.org/)
 
-![image](https://github.com/srobledo2021/Practica_arduino/assets/113594786/415cd6ae-7215-4af0-82a4-7f017483b280)
-
+![image](https://github.com/srobledo2021/Practica_arduino/assets/113594786/85c636b5-1208-40e9-a4ff-1d9c8328e501)
 
 
 Las librerías que estamos usando son:
